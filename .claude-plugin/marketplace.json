@@ -1,0 +1,89 @@
+{
+    "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+    "name": "cheapsteak-agent-plugins",
+    "version": "0.3.0",
+    "description": "Chang's Claude Code plugins — generic dev workflow, skill authoring, and macOS/web utilities",
+    "owner": {
+        "name": "Chang Wang",
+        "email": "garnwraly@gmail.com"
+    },
+    "plugins": [
+        {
+            "name": "git-flow",
+            "description": "Commit, push, PR, rebase, and review-feedback workflows on top of git + gh CLI",
+            "version": "0.2.0",
+            "source": "./plugins/git-flow",
+            "author": {
+                "name": "Chang Wang",
+                "email": "garnwraly@gmail.com"
+            },
+            "keywords": ["git", "github", "pr", "workflow"]
+        },
+        {
+            "name": "skill-authoring-kit",
+            "description": "Build Claude skills, plugins, and hooks. Bundles skill-authoring guide, plugin scaffolder, and hook-output reference.",
+            "version": "0.1.0",
+            "source": "./plugins/skill-authoring-kit",
+            "author": {
+                "name": "Chang Wang",
+                "email": "garnwraly@gmail.com"
+            },
+            "keywords": ["skills", "plugins", "hooks", "authoring", "meta"]
+        },
+        {
+            "name": "agent-workflow",
+            "description": "Process patterns for working with Claude: stress-test artifacts via Adversary/Counterweight, and schedule delayed prompts that fire later in the current session.",
+            "version": "0.1.0",
+            "source": "./plugins/agent-workflow",
+            "author": {
+                "name": "Chang Wang",
+                "email": "garnwraly@gmail.com"
+            },
+            "keywords": ["workflow", "review", "scheduling", "adversarial", "patterns"]
+        },
+        {
+            "name": "monitor",
+            "description": "Background polling loop that monitors an external system and wakes Claude only when state changes. Spends zero tokens while waiting.",
+            "version": "0.1.0",
+            "source": "./plugins/monitor",
+            "author": {
+                "name": "Chang Wang",
+                "email": "garnwraly@gmail.com"
+            },
+            "keywords": ["polling", "background", "watch", "monitoring", "ci"]
+        },
+        {
+            "name": "macos-ops",
+            "description": "macOS sysadmin skills. Today: diagnose memory pressure and identify what's consuming RAM.",
+            "version": "0.1.0",
+            "source": "./plugins/macos-ops",
+            "author": {
+                "name": "Chang Wang",
+                "email": "garnwraly@gmail.com"
+            },
+            "keywords": ["macos", "memory", "diagnostics", "performance"]
+        },
+        {
+            "name": "web-tools",
+            "description": "Browse the web with a real browser to verify UI behavior, diagnose frontend issues, or take screenshots. Today: Playwright-CLI-based browsing.",
+            "version": "0.1.0",
+            "source": "./plugins/web-tools",
+            "author": {
+                "name": "Chang Wang",
+                "email": "garnwraly@gmail.com"
+            },
+            "keywords": ["browser", "playwright", "frontend", "verify", "screenshot"]
+        },
+        {
+            "name": "gql",
+            "description": "GraphQL and Apollo Client patterns. Today: Apollo cache updates for mutations.",
+            "version": "0.1.0",
+            "source": "./plugins/gql",
+            "author": {
+                "name": "Chang Wang",
+                "email": "garnwraly@gmail.com"
+            },
+            "keywords": ["graphql", "apollo", "cache", "mutations", "frontend"]
+        }
+    ]
+}

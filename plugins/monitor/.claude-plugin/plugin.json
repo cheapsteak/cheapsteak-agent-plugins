@@ -1,0 +1,10 @@
+{
+    "name": "monitor",
+    "description": "Background polling loop that monitors an external system and wakes Claude only when state changes. Spends zero tokens while waiting.",
+    "version": "0.1.0",
+    "author": {
+        "name": "Chang Wang",
+        "email": "garnwraly@gmail.com"
+    },
+    "keywords": ["polling", "background", "watch", "monitoring", "ci"]
+}

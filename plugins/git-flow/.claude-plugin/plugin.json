@@ -1,0 +1,10 @@
+{
+    "name": "git-flow",
+    "description": "Branch, commit, push, PR, rebase, and review-feedback workflows on top of git + gh CLI",
+    "version": "0.2.0",
+    "author": {
+        "name": "Chang Wang",
+        "email": "garnwraly@gmail.com"
+    },
+    "keywords": ["git", "github", "pr", "workflow"]
+}

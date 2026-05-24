@@ -1,0 +1,10 @@
+{
+    "name": "macos-ops",
+    "description": "macOS sysadmin skills. Today: diagnose memory pressure and identify what's consuming RAM.",
+    "version": "0.1.0",
+    "author": {
+        "name": "Chang Wang",
+        "email": "garnwraly@gmail.com"
+    },
+    "keywords": ["macos", "memory", "diagnostics", "performance"]
+}
