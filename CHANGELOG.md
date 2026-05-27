@@ -1,5 +1,9 @@
 # Changelog
 
+## [agent-workflow] 0.1.1
+
+**New:** `/explain` command — injects a prompt to explain using pragmatics and semantics, no syntax.
+
 ## [cheapsteak-agent-plugins] 0.3.0
 
 Seven plugins:
