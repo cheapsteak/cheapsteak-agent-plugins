@@ -75,12 +75,17 @@ Examples:
 
 Before generating the title, consult `references/title-examples.md` for tone and style calibration.
 
-**Title generation process (do this internally, don't show the user):**
+**Generate the title silently. The user does NOT see options and does NOT pick.**
 
-1. Generate 3 candidate **prefixes** (e.g., Fix, DX, Reliability) with a one-line rationale for each
-2. Generate 3 candidate **title bodies** (the part after the colon)
-3. Reason about which prefix × body combination best fits the change, applying the category edge cases and style rules above
-4. Use the winning combination directly — do not ask the user to choose
+Asking the user to choose between titles defeats the purpose of this skill — they invoked `/pr` to skip exactly that deliberation. Listing alternatives, presenting candidates, or asking "which do you prefer?" is a regression. The user typed `/pr` to get a title, not to be quizzed.
+
+Process:
+
+1. Internally weigh a few prefix candidates and a few body candidates against the category rules and style rules above
+2. Pick the one combination that wins. **Discard the others without naming them in your output to the user.**
+3. Write the chosen title directly into the `gh pr create --title` command in Step 7
+
+After the PR is created, it's fine to mention *why* you picked it ("went with `Fix:` because this closes a regression"). It is NOT fine to enumerate alternatives or invite the user to swap.
 
 ## Step 4: Write the PR Body
 

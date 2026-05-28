@@ -1,5 +1,9 @@
 # Changelog
 
+## [git-flow] 0.2.1
+
+**Fixed:** `pr` skill was sometimes asking the user to pick between candidate titles instead of choosing one. Rewrote the title-generation block so the no-choice constraint is the lede, not a footer — the "Generate 3 candidates" framing pattern-matched too easily to "present a list for the user to pick from," and the "do not ask" footer at the end was easy to override. Now the rule comes first, with the reason (the user invoked `/pr` to skip that deliberation).
+
 ## [agent-workflow] 0.3.0
 
 `monitor` skill: recipe DSL runtime + 5-recipe library.
