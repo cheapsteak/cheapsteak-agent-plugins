@@ -25,7 +25,7 @@ Restart Claude Code after installation — plugins added mid-session don't load.
 |--------|---------|-------------|
 | **`git-flow`** | 0.2.0 | Commit, push, PR, rebase, review-feedback workflows on top of `git` + `gh` |
 | **`skill-authoring-kit`** | 0.1.0 | Build Claude skills, plugins, and hooks |
-| **`agent-workflow`** | 0.2.0 | Adversarial review, scheduled wake-ups, background-monitor polling, `/explain` command |
+| **`agent-workflow`** | 0.3.0 | Adversarial review, scheduled wake-ups, background-monitor polling, `/explain` command |
 | **`macos-ops`** | 0.1.0 | macOS sysadmin (memory diagnosis today) |
 | **`web-tools`** | 0.1.0 | Playwright-CLI-based browsing |
 | **`gql`** | 0.1.0 | GraphQL / Apollo patterns |

@@ -33,7 +33,7 @@
         {
             "name": "agent-workflow",
             "description": "Session patterns for working with Claude: adversarial review (stress-test artifacts), later (schedule a delayed prompt), and monitor (wake Claude when external state changes).",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "source": "./plugins/agent-workflow",
             "author": {
                 "name": "Chang Wang",
