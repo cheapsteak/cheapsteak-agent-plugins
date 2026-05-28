@@ -1,7 +1,7 @@
 {
     "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
     "name": "cheapsteak-agent-plugins",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "description": "Chang's Claude Code plugins — generic dev workflow, skill authoring, and macOS/web utilities",
     "owner": {
         "name": "Chang Wang",
@@ -32,25 +32,14 @@
         },
         {
             "name": "agent-workflow",
-            "description": "Process patterns for working with Claude: stress-test artifacts via Adversary/Counterweight, and schedule delayed prompts that fire later in the current session.",
-            "version": "0.1.1",
+            "description": "Session patterns for working with Claude: adversarial review (stress-test artifacts), later (schedule a delayed prompt), and monitor (wake Claude when external state changes).",
+            "version": "0.2.0",
             "source": "./plugins/agent-workflow",
             "author": {
                 "name": "Chang Wang",
                 "email": "garnwraly@gmail.com"
             },
-            "keywords": ["workflow", "review", "scheduling", "adversarial", "patterns"]
-        },
-        {
-            "name": "monitor",
-            "description": "Background polling loop that monitors an external system and wakes Claude only when state changes. Spends zero tokens while waiting.",
-            "version": "0.1.0",
-            "source": "./plugins/monitor",
-            "author": {
-                "name": "Chang Wang",
-                "email": "garnwraly@gmail.com"
-            },
-            "keywords": ["polling", "background", "watch", "monitoring", "ci"]
+            "keywords": ["workflow", "review", "scheduling", "monitoring", "polling", "adversarial", "patterns"]
         },
         {
             "name": "macos-ops",

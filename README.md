@@ -12,7 +12,6 @@ Chang's Claude Code plugins — generic dev workflow, skill authoring, and macOS
 /plugin install git-flow@cheapsteak-agent-plugins
 /plugin install skill-authoring-kit@cheapsteak-agent-plugins
 /plugin install agent-workflow@cheapsteak-agent-plugins
-/plugin install monitor@cheapsteak-agent-plugins
 /plugin install macos-ops@cheapsteak-agent-plugins
 /plugin install web-tools@cheapsteak-agent-plugins
 /plugin install gql@cheapsteak-agent-plugins
@@ -26,8 +25,7 @@ Restart Claude Code after installation — plugins added mid-session don't load.
 |--------|---------|-------------|
 | **`git-flow`** | 0.2.0 | Commit, push, PR, rebase, review-feedback workflows on top of `git` + `gh` |
 | **`skill-authoring-kit`** | 0.1.0 | Build Claude skills, plugins, and hooks |
-| **`agent-workflow`** | 0.1.1 | Adversarial review + scheduled wake-ups + `/explain` command |
-| **`monitor`** | 0.1.0 | Background polling that wakes Claude only on state change |
+| **`agent-workflow`** | 0.2.0 | Adversarial review, scheduled wake-ups, background-monitor polling, `/explain` command |
 | **`macos-ops`** | 0.1.0 | macOS sysadmin (memory diagnosis today) |
 | **`web-tools`** | 0.1.0 | Playwright-CLI-based browsing |
 | **`gql`** | 0.1.0 | GraphQL / Apollo patterns |
@@ -38,8 +36,7 @@ Restart Claude Code after installation — plugins added mid-session don't load.
 |--------|--------|
 | `git-flow` | `pr`, `rebase`, `monitor-pr`, `address-pr-feedback` |
 | `skill-authoring-kit` | `skill-authoring`, `create-plugin`, `claude-hooks` |
-| `agent-workflow` | `adversarial-review`, `later` |
-| `monitor` | `monitor` |
+| `agent-workflow` | `adversarial-review`, `later`, `monitor` |
 | `macos-ops` | `diagnose-memory` |
 | `web-tools` | `browse` |
 | `gql` | `apollo-optimistic-updates` |

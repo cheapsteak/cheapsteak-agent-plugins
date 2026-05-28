@@ -1,5 +1,15 @@
 # Changelog
 
+## [cheapsteak-agent-plugins] 0.4.0
+
+`monitor` plugin folded into `agent-workflow`. Six plugins now.
+
+**Removed:** `monitor` (as a standalone plugin).
+
+## [agent-workflow] 0.2.0
+
+**New:** `monitor` skill — background polling that wakes Claude when external state changes. Absorbed from the now-removed `monitor` plugin. Sits alongside `later` (deferred wake-up) and `adversarial-review` (second-opinion review).
+
 ## [agent-workflow] 0.1.1
 
 **New:** `/explain` command — injects a prompt to explain using pragmatics and semantics, no syntax.
