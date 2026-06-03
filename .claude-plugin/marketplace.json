@@ -1,7 +1,7 @@
 {
     "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
     "name": "cheapsteak-agent-plugins",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "description": "Chang's Claude Code plugins — generic dev workflow, skill authoring, and macOS/web utilities",
     "owner": {
         "name": "Chang Wang",
@@ -54,14 +54,14 @@
         },
         {
             "name": "web-tools",
-            "description": "Browse the web with a real browser to verify UI behavior, diagnose frontend issues, or take screenshots. Today: Playwright-CLI-based browsing.",
-            "version": "0.1.0",
+            "description": "Browse the web in your real, logged-in browser to verify UI behavior, diagnose frontend issues, or take screenshots. Today: cua-driver computer-use browsing.",
+            "version": "0.2.0",
             "source": "./plugins/web-tools",
             "author": {
                 "name": "Chang Wang",
                 "email": "garnwraly@gmail.com"
             },
-            "keywords": ["browser", "playwright", "frontend", "verify", "screenshot"]
+            "keywords": ["browser", "cua-driver", "computer-use", "frontend", "verify", "screenshot"]
         },
         {
             "name": "gql",
