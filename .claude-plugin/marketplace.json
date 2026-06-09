@@ -54,14 +54,14 @@
         },
         {
             "name": "web-tools",
-            "description": "Browse the web in your real, logged-in browser to verify UI behavior, diagnose frontend issues, or take screenshots. Today: cua-driver computer-use browsing.",
-            "version": "0.2.0",
+            "description": "Browse the web in a real browser to verify UI behavior, diagnose frontend issues, or take screenshots. Today: Playwright-CLI-based browsing, with cua-driver as an alternative for the user's already-open browser.",
+            "version": "0.3.0",
             "source": "./plugins/web-tools",
             "author": {
                 "name": "Chang Wang",
                 "email": "garnwraly@gmail.com"
             },
-            "keywords": ["browser", "cua-driver", "computer-use", "frontend", "verify", "screenshot"]
+            "keywords": ["browser", "playwright", "cua-driver", "frontend", "verify", "screenshot"]
         },
         {
             "name": "gql",

@@ -1,5 +1,12 @@
 # Changelog
 
+## [web-tools] 0.3.0
+
+Reverts the `browse` skill back to Playwright CLI as the default. Adds a brief "Alternative: cua-driver" section pointing at the kept `references/cua-driver-setup.md` for when you need to drive the user's already-open browser.
+
+**Changed:** default browsing path is Playwright CLI again, not cua-driver.
+**New:** cua-driver documented as an explicit alternative for already-open-browser / Electron / OAuth-popup cases.
+
 ## [git-flow] 0.2.1
 
 **Fixed:** `pr` skill was sometimes asking the user to pick between candidate titles instead of choosing one. Rewrote the title-generation block so the no-choice constraint is the lede, not a footer — the "Generate 3 candidates" framing pattern-matched too easily to "present a list for the user to pick from," and the "do not ask" footer at the end was easy to override. Now the rule comes first, with the reason (the user invoked `/pr` to skip that deliberation).

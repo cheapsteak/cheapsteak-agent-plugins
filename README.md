@@ -27,7 +27,7 @@ Restart Claude Code after installation — plugins added mid-session don't load.
 | **`skill-authoring-kit`** | 0.1.0 | Build Claude skills, plugins, and hooks |
 | **`agent-workflow`** | 0.3.0 | Adversarial review, scheduled wake-ups, background-monitor polling, `/explain` command |
 | **`macos-ops`** | 0.1.0 | macOS sysadmin (memory diagnosis today) |
-| **`web-tools`** | 0.1.0 | Playwright-CLI-based browsing |
+| **`web-tools`** | 0.3.0 | Playwright-CLI-based browsing (cua-driver as alternative) |
 | **`gql`** | 0.1.0 | GraphQL / Apollo patterns |
 
 ### Skill → plugin mapping
