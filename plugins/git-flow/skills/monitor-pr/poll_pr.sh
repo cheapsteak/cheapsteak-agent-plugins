@@ -78,20 +78,23 @@ while (( elapsed < MAX_WAIT )); do
     if echo "$cur_bot_comment" | grep -q "✅"; then
       # Even on APPROVE, the bot can flag findings the body says belong in
       # this PR. Common convention across reviewer-bot stickies:
-      # top-level severity headings (`### Critical`, `### High`, `### Medium`)
-      # mean "fix this here or as a same-day follow-up"; Minors are collapsed
-      # under `<details>` and are explicitly OK to defer. If the body has any
-      # top-level Critical/High/Medium heading outside a <details> block, emit
-      # APPROVED_WITH_FINDINGS:<csv> so the caller doesn't exit prematurely.
+      # top-level severity markers (`### Critical` headings or bold `**Medium**`
+      # lines) mean "fix this here or as a same-day follow-up"; Minors are
+      # collapsed under `<details>` and are explicitly OK to defer. If the body
+      # has any top-level Critical/High/Medium marker outside a <details> block,
+      # emit APPROVED_WITH_FINDINGS:<csv> so the caller doesn't exit prematurely.
       findings=$(echo "$cur_bot_comment" | python3 -c '
 import re, sys
 body = sys.stdin.read()
 # Strip <details>...</details> blocks (non-greedy, dot matches newlines).
 stripped = re.sub(r"<details>.*?</details>", "", body, flags=re.DOTALL)
-# Look for top-level severity headings. Match `### Medium` / `### Critical`
-# / `### High` at the start of a line, optionally followed by trailing
-# qualifiers (e.g. `### Medium — one MEDIUM gap in the new linter`).
-hits = re.findall(r"^### (Critical|High|Medium)\b", stripped, flags=re.MULTILINE)
+# Look for top-level severity markers at the start of a line, optionally
+# followed by trailing qualifiers (e.g. `### Medium — one MEDIUM gap`). Bots
+# render these two ways, sometimes within the same review series:
+#   `### Medium`     (heading form)
+#   `**Medium**`     (bold-line form — missed until 2026-06-10, when a real
+#                     Medium sailed through as a clean APPROVED)
+hits = re.findall(r"^(?:###\s+|\*\*)(Critical|High|Medium)\b", stripped, flags=re.MULTILINE)
 if hits:
     # De-duplicate while preserving order
     seen = []

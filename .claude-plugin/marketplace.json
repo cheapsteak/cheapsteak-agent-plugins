@@ -11,7 +11,7 @@
         {
             "name": "git-flow",
             "description": "Commit, push, PR, rebase, and review-feedback workflows on top of git + gh CLI",
-            "version": "0.2.1",
+            "version": "0.2.2",
             "source": "./plugins/git-flow",
             "author": {
                 "name": "Chang Wang",
