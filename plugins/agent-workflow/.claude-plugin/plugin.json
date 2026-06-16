@@ -1,10 +1,20 @@
 {
     "name": "agent-workflow",
-    "description": "Session patterns for working with Claude: adversarial review (stress-test artifacts), later (schedule a delayed prompt), and monitor (wake Claude when external state changes).",
-    "version": "0.3.0",
+    "description": "Session patterns for working with Claude: adversarial review (stress-test artifacts), later (schedule a delayed prompt), monitor (wake Claude when external state changes), and improvement-loop (self-perpetuating multi-agent improvement rounds).",
+    "version": "0.4.0",
     "author": {
         "name": "Chang Wang",
         "email": "garnwraly@gmail.com"
     },
-    "keywords": ["workflow", "review", "scheduling", "monitoring", "polling", "adversarial", "patterns"]
+    "keywords": [
+        "workflow",
+        "review",
+        "scheduling",
+        "monitoring",
+        "polling",
+        "adversarial",
+        "patterns",
+        "improvement-loop",
+        "orchestration"
+    ]
 }

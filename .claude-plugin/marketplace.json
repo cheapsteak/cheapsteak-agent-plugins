@@ -1,8 +1,8 @@
 {
     "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
     "name": "cheapsteak-agent-plugins",
-    "version": "0.5.0",
-    "description": "Chang's Claude Code plugins — generic dev workflow, skill authoring, and macOS/web utilities",
+    "version": "0.6.0",
+    "description": "Chang's Claude Code plugins \u2014 generic dev workflow, skill authoring, and macOS/web utilities",
     "owner": {
         "name": "Chang Wang",
         "email": "garnwraly@gmail.com"
@@ -17,7 +17,12 @@
                 "name": "Chang Wang",
                 "email": "garnwraly@gmail.com"
             },
-            "keywords": ["git", "github", "pr", "workflow"]
+            "keywords": [
+                "git",
+                "github",
+                "pr",
+                "workflow"
+            ]
         },
         {
             "name": "skill-authoring-kit",
@@ -28,18 +33,34 @@
                 "name": "Chang Wang",
                 "email": "garnwraly@gmail.com"
             },
-            "keywords": ["skills", "plugins", "hooks", "authoring", "meta"]
+            "keywords": [
+                "skills",
+                "plugins",
+                "hooks",
+                "authoring",
+                "meta"
+            ]
         },
         {
             "name": "agent-workflow",
-            "description": "Session patterns for working with Claude: adversarial review (stress-test artifacts), later (schedule a delayed prompt), and monitor (wake Claude when external state changes).",
-            "version": "0.3.0",
+            "description": "Session patterns for working with Claude: adversarial review (stress-test artifacts), later (schedule a delayed prompt), monitor (wake Claude when external state changes), and improvement-loop (self-perpetuating multi-agent improvement rounds).",
+            "version": "0.4.0",
             "source": "./plugins/agent-workflow",
             "author": {
                 "name": "Chang Wang",
                 "email": "garnwraly@gmail.com"
             },
-            "keywords": ["workflow", "review", "scheduling", "monitoring", "polling", "adversarial", "patterns"]
+            "keywords": [
+                "workflow",
+                "review",
+                "scheduling",
+                "monitoring",
+                "polling",
+                "adversarial",
+                "patterns",
+                "improvement-loop",
+                "orchestration"
+            ]
         },
         {
             "name": "macos-ops",
@@ -50,7 +71,12 @@
                 "name": "Chang Wang",
                 "email": "garnwraly@gmail.com"
             },
-            "keywords": ["macos", "memory", "diagnostics", "performance"]
+            "keywords": [
+                "macos",
+                "memory",
+                "diagnostics",
+                "performance"
+            ]
         },
         {
             "name": "web-tools",
@@ -61,7 +87,14 @@
                 "name": "Chang Wang",
                 "email": "garnwraly@gmail.com"
             },
-            "keywords": ["browser", "playwright", "cua-driver", "frontend", "verify", "screenshot"]
+            "keywords": [
+                "browser",
+                "playwright",
+                "cua-driver",
+                "frontend",
+                "verify",
+                "screenshot"
+            ]
         },
         {
             "name": "gql",
@@ -72,7 +105,13 @@
                 "name": "Chang Wang",
                 "email": "garnwraly@gmail.com"
             },
-            "keywords": ["graphql", "apollo", "cache", "mutations", "frontend"]
+            "keywords": [
+                "graphql",
+                "apollo",
+                "cache",
+                "mutations",
+                "frontend"
+            ]
         }
     ]
 }
