@@ -1,7 +1,7 @@
 {
     "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
     "name": "cheapsteak-agent-plugins",
-    "version": "0.7.0",
+    "version": "0.8.0",
     "description": "Chang's Claude Code plugins \u2014 generic dev workflow, skill authoring, and macOS/web utilities",
     "owner": {
         "name": "Chang Wang",
@@ -11,7 +11,7 @@
         {
             "name": "git-flow",
             "description": "Commit, push, PR, rebase, and review-feedback workflows on top of git + gh CLI",
-            "version": "0.2.2",
+            "version": "0.3.0",
             "source": "./plugins/git-flow",
             "author": {
                 "name": "Chang Wang",

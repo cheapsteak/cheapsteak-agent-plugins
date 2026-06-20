@@ -1,5 +1,13 @@
 # Changelog
 
+## [cheapsteak-agent-plugins] 0.8.0
+
+git-flow gains the `subagent-review-loop` skill (fresh-context iterative `/code-review` driver).
+
+## [git-flow] 0.3.0
+
+**New:** `subagent-review-loop` skill — spawn a fresh-context subagent to invoke `/code-review` (arg pass-through, default `high`), triage findings in the driver session (bugfixes/perf addressed directly, user-facing/behavioral changes surfaced first), then loop until no significant findings remain (hard cap 5 rounds). Fresh subagent context avoids same-session bias.
+
 ## [computer-use] 0.1.0
 
 New plugin: drive native desktop GUI apps via cua-driver, Windows-focused.
