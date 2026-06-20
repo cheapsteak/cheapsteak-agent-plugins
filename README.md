@@ -24,7 +24,7 @@ Restart Claude Code after installation — plugins added mid-session don't load.
 
 | Plugin | Version | Description |
 |--------|---------|-------------|
-| **`git-flow`** | 0.3.0 | Commit, push, PR, rebase, review-feedback, subagent-review-loop workflows on top of `git` + `gh` |
+| **`git-flow`** | 0.4.0 | Commit, push, PR, rebase, review-feedback, subagent-review-loop, stacked-prs workflows on top of `git` + `gh` |
 | **`skill-authoring-kit`** | 0.1.0 | Build Claude skills, plugins, and hooks |
 | **`agent-workflow`** | 0.3.0 | Adversarial review, scheduled wake-ups, background-monitor polling, `/explain` command |
 | **`macos-ops`** | 0.1.0 | macOS sysadmin (memory diagnosis today) |
@@ -36,7 +36,7 @@ Restart Claude Code after installation — plugins added mid-session don't load.
 
 | Plugin | Skills |
 |--------|--------|
-| `git-flow` | `pr`, `rebase`, `monitor-pr`, `address-pr-feedback`, `subagent-review-loop` |
+| `git-flow` | `pr`, `rebase`, `monitor-pr`, `address-pr-feedback`, `subagent-review-loop`, `stacked-prs` |
 | `skill-authoring-kit` | `skill-authoring`, `create-plugin`, `claude-hooks` |
 | `agent-workflow` | `adversarial-review`, `later`, `monitor` |
 | `macos-ops` | `diagnose-memory` |

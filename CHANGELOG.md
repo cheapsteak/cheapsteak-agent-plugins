@@ -1,5 +1,13 @@
 # Changelog
 
+## [cheapsteak-agent-plugins] 0.9.0
+
+git-flow gains the `stacked-prs` skill.
+
+## [git-flow] 0.4.0
+
+**New:** `stacked-prs` skill — manage a PR stacked on another unmerged branch and re-point it onto `main` after the base merges via a merge queue. Covers the `git rebase --onto <old-base-tip> <branch>` cut, the `gh pr edit --base main` swap, and verifying the resulting branch is clean against `origin/main`.
+
 ## [cheapsteak-agent-plugins] 0.8.0
 
 git-flow gains the `subagent-review-loop` skill (fresh-context iterative `/code-review` driver).
