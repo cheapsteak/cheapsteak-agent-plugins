@@ -1,5 +1,14 @@
 # Changelog
 
+## [computer-use] 0.1.0
+
+New plugin: drive native desktop GUI apps via cua-driver, Windows-focused.
+
+**New:**
+- `drive-pc-apps` skill — operate Windows apps through the `cua-computer-use` MCP. Centerpiece is the **DPI click-offset fix**: against DPI-unaware legacy apps (Delphi/VCL/old Win32) on a fractional-scaled display, cua-driver captures un-stretched (`PrintWindow`) but maps clicks to physical screen 1:1, so pixel clicks land at `1/scale` and miss — compensate by `click = screenshot_px × scale_factor`. Also covers headless foreground control via the UIAccess worker, the re-query-geometry-every-interaction rule (windows move/resize), preferring UIA `element_index` over pixels, and reading data out via UIA tree / print-to-PDF.
+- Script `scripts/enable-uia-worker.ps1` — one-shot elevated setup that signs the UIAccess worker (auto-discovers the exe), trusts the cert, and flips `EnableSecureUIAPaths`, so headless foreground control works.
+- References: `dpi-click-offset.md` (code-verified root cause + upstream-bug references), `uiaccess-foreground-setup.md` (sign the worker, `CUA_DRIVER_RS_SPAWN_UIA_WORKER`, integrity/pipe pitfalls), `cua-driver-windows-setup.md` (install/register on Windows).
+
 ## [web-tools] 0.3.0
 
 Reverts the `browse` skill back to Playwright CLI as the default. Adds a brief "Alternative: cua-driver" section pointing at the kept `references/cua-driver-setup.md` for when you need to drive the user's already-open browser.

@@ -15,6 +15,7 @@ Chang's Claude Code plugins — generic dev workflow, skill authoring, and macOS
 /plugin install macos-ops@cheapsteak-agent-plugins
 /plugin install web-tools@cheapsteak-agent-plugins
 /plugin install gql@cheapsteak-agent-plugins
+/plugin install computer-use@cheapsteak-agent-plugins
 ```
 
 Restart Claude Code after installation — plugins added mid-session don't load.
@@ -29,6 +30,7 @@ Restart Claude Code after installation — plugins added mid-session don't load.
 | **`macos-ops`** | 0.1.0 | macOS sysadmin (memory diagnosis today) |
 | **`web-tools`** | 0.3.0 | Playwright-CLI-based browsing (cua-driver as alternative) |
 | **`gql`** | 0.1.0 | GraphQL / Apollo patterns |
+| **`computer-use`** | 0.1.0 | Drive native desktop apps via cua-driver (Windows DPI click-offset fix + headless foreground) |
 
 ### Skill → plugin mapping
 
@@ -40,6 +42,7 @@ Restart Claude Code after installation — plugins added mid-session don't load.
 | `macos-ops` | `diagnose-memory` |
 | `web-tools` | `browse` |
 | `gql` | `apollo-optimistic-updates` |
+| `computer-use` | `drive-pc-apps` |
 
 ## Repository layout
 
