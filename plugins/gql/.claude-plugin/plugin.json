@@ -1,7 +1,6 @@
 {
     "name": "gql",
     "description": "GraphQL and Apollo Client patterns. Today: Apollo cache updates for mutations.",
-    "version": "0.1.0",
     "author": {
         "name": "Chang Wang",
         "email": "garnwraly@gmail.com"

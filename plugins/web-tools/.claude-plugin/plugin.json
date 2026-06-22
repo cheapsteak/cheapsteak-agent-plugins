@@ -1,7 +1,6 @@
 {
     "name": "web-tools",
     "description": "Browse the web in a real browser to verify UI behavior, diagnose frontend issues, or take screenshots. Today: Playwright-CLI-based browsing, with cua-driver as an alternative for the user's already-open browser.",
-    "version": "0.3.0",
     "author": {
         "name": "Chang Wang",
         "email": "garnwraly@gmail.com"

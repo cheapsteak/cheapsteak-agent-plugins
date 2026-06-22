@@ -11,7 +11,6 @@
         {
             "name": "git-flow",
             "description": "Commit, push, PR, rebase, and review-feedback workflows on top of git + gh CLI",
-            "version": "0.4.0",
             "source": "./plugins/git-flow",
             "author": {
                 "name": "Chang Wang",
@@ -27,7 +26,6 @@
         {
             "name": "skill-authoring-kit",
             "description": "Build Claude skills, plugins, and hooks. Bundles skill-authoring guide, plugin scaffolder, and hook-output reference.",
-            "version": "0.1.0",
             "source": "./plugins/skill-authoring-kit",
             "author": {
                 "name": "Chang Wang",
@@ -44,7 +42,6 @@
         {
             "name": "agent-workflow",
             "description": "Session patterns for working with Claude: adversarial review (stress-test artifacts), later (schedule a delayed prompt), monitor (wake Claude when external state changes), and improvement-loop (self-perpetuating multi-agent improvement rounds).",
-            "version": "0.4.0",
             "source": "./plugins/agent-workflow",
             "author": {
                 "name": "Chang Wang",
@@ -65,7 +62,6 @@
         {
             "name": "macos-ops",
             "description": "macOS sysadmin skills. Today: diagnose memory pressure and identify what's consuming RAM.",
-            "version": "0.1.0",
             "source": "./plugins/macos-ops",
             "author": {
                 "name": "Chang Wang",
@@ -81,7 +77,6 @@
         {
             "name": "web-tools",
             "description": "Browse the web in a real browser to verify UI behavior, diagnose frontend issues, or take screenshots. Today: Playwright-CLI-based browsing, with cua-driver as an alternative for the user's already-open browser.",
-            "version": "0.3.0",
             "source": "./plugins/web-tools",
             "author": {
                 "name": "Chang Wang",
@@ -99,7 +94,6 @@
         {
             "name": "gql",
             "description": "GraphQL and Apollo Client patterns. Today: Apollo cache updates for mutations.",
-            "version": "0.1.0",
             "source": "./plugins/gql",
             "author": {
                 "name": "Chang Wang",
@@ -116,7 +110,6 @@
         {
             "name": "computer-use",
             "description": "Drive native desktop GUI apps via cua-driver — read the screen, click, type, navigate — reliably, including DPI-unaware legacy Windows apps where pixel clicks land offset. Today: drive-pc-apps.",
-            "version": "0.1.0",
             "source": "./plugins/computer-use",
             "author": {
                 "name": "Chang Wang",

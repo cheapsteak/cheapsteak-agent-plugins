@@ -1,7 +1,6 @@
 {
     "name": "skill-authoring-kit",
     "description": "Build Claude skills, plugins, and hooks. Bundles skill-authoring guide, plugin scaffolder, and hook-output reference.",
-    "version": "0.1.0",
     "author": {
         "name": "Chang Wang",
         "email": "garnwraly@gmail.com"

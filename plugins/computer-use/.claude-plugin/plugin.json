@@ -1,7 +1,6 @@
 {
     "name": "computer-use",
     "description": "Drive native desktop GUI apps via cua-driver — read the screen, click, type, navigate — reliably, including DPI-unaware legacy Windows apps where pixel clicks land offset. Today: drive-pc-apps.",
-    "version": "0.1.0",
     "author": {
         "name": "Chang Wang",
         "email": "garnwraly@gmail.com"
