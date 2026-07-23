@@ -184,8 +184,20 @@ if hits:
         --repo "$REPO" --status failure --json databaseId,name -L 5 2>/dev/null || echo "[]")
       changes+="Failed runs: $failed_runs\n"
       for run_id in $(echo "$failed_runs" | jq -r '.[].databaseId' 2>/dev/null); do
-        log_tail=$(gh run view "$run_id" --repo "$REPO" --log-failed 2>/dev/null | tail -100 || echo "(no logs)")
-        changes+="--- Run $run_id logs ---\n$log_tail\n"
+        log_all=$(gh run view "$run_id" --repo "$REPO" --log-failed 2>/dev/null || echo "(no logs)")
+        # A blind tail -100 usually shows whatever ran LAST (e.g. hundreds of
+        # passing tests after the one failure). Surface failure-marker lines
+        # first — swift-test ✘ / "recorded an issue", GH ::error, generic
+        # error/FAIL markers — then a short tail for surrounding context.
+        log_hits=$(printf '%s\n' "$log_all" \
+          | grep -E '✘|##\[error\]|recorded an issue|error:|FAILED|Fatal error|Expectation failed' \
+          | tail -40)
+        log_tail=$(printf '%s\n' "$log_all" | tail -25)
+        if [ -n "$log_hits" ]; then
+          changes+="--- Run $run_id failure lines ---\n$log_hits\n--- Run $run_id log tail ---\n$log_tail\n"
+        else
+          changes+="--- Run $run_id logs (no failure markers matched; tail) ---\n$log_tail\n"
+        fi
       done
     elif (( n_pending == 0 && (n_pass + n_skip) == n_total && n_total > 0 )); then
       prev_checks="$cur_checks"
