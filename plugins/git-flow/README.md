@@ -18,8 +18,11 @@ Commit, push, PR, rebase, and review-feedback workflows on top of `git` + `gh` C
 
 ## Configuration
 
-`monitor-pr` reads `PR_REVIEWER_BOTS` (comma-separated bot logins) to know which reviewer-bot verdicts gate exit. Defaults to `claude[bot]`. Example:
+`monitor-pr` reads `PR_REVIEWER_BOTS` (comma-separated bot logins) to know which reviewer-bot verdicts gate exit. Defaults to `claude[bot]`. Entries match exactly unless they contain `*`, which is a glob:
 
 ```bash
 export PR_REVIEWER_BOTS="claude[bot],my-project-reviewer[bot]"
+export PR_REVIEWER_BOTS="*claude-reviewer[bot]"   # matches tbd-, acme-, … prefixed bots
 ```
+
+Include the literal `[bot]` suffix — `*claude-reviewer` matches nothing, and a pattern matching nothing looks exactly like "the bot hasn't reviewed yet", so the poller waits out its full timeout.

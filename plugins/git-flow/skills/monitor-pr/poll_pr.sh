@@ -6,8 +6,10 @@
 #
 # Environment:
 #   PR_REVIEWER_BOTS — comma-separated bot logins whose verdicts gate exit.
-#                      Defaults to "claude[bot]".
-#                      Example: "claude[bot],my-project-reviewer[bot]"
+#                      Defaults to "claude[bot]". Entries match exactly unless
+#                      they contain `*`, which is a glob. Include the literal
+#                      `[bot]` suffix -- `*claude-reviewer` matches nothing.
+#                      Example: "claude[bot],*claude-reviewer[bot]"
 #
 # Self-initializing: gathers its own baseline on startup, then polls for
 # changes. No external state file needed — avoids sandbox path issues
@@ -25,9 +27,42 @@ POLL_INTERVAL="${3:-60}"
 MAX_WAIT="${4:-3600}"
 
 # Build a jq selector expression from the configured bot list.
-# Result looks like: .user.login == "claude[bot]" or .user.login == "other[bot]"
+# Entries match the login exactly unless they contain `*`, which is a glob:
+#   claude[bot]             -> only claude[bot]
+#   *claude-reviewer[bot]   -> tbd-claude-reviewer[bot], acme-claude-reviewer[bot], ...
+# Result looks like: (.user.login | test("^claude\\[bot\\]$")) or (...)
+#
+# Two escaping traps, both load-bearing:
+#  1. jq's test() is a REGEX engine, and a bot login is not a regex. `[bot]` is a
+#     character class, so an unescaped `^claude[bot]$` matches "claudeb" and NOT
+#     "claude[bot]" -- i.e. the naive form both over- and under-matches. Every
+#     metacharacter is escaped first; only `*` is then translated to `.*`.
+#  2. The filter is embedded in a jq PROGRAM (gh's --jq takes no --arg), so the
+#     escapes must survive jq's string-literal parsing -- hence `\\[`, not `\[`.
+#     Entries carrying characters no GitHub login can contain are rejected
+#     outright (below) rather than escaped, so they can't inject filter syntax.
 BOTS="${PR_REVIEWER_BOTS:-claude[bot]}"
-BOT_FILTER=$(echo "$BOTS" | tr ',' '\n' | awk 'NF { printf "%s.user.login == \"%s\"", (n++ ? " or " : ""), $0 }')
+# `printf '%s\n'` (not '%s'): without the trailing newline `read` hits EOF on the
+# final entry and the loop body never runs for it -- silently dropping the last
+# configured bot, or every bot when only one is configured.
+BOT_FILTER=$(printf '%s\n' "$BOTS" | tr ',' '\n' | while IFS= read -r bot; do
+  bot="$(printf '%s' "$bot" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+  [ -z "$bot" ] && continue
+  # GitHub logins are alphanumeric with hyphens; bot logins add a `[bot]` suffix.
+  # Anything else is a typo'd env var, and quietly escaping it would build a
+  # filter that matches nothing -- indistinguishable from "the bot hasn't
+  # reviewed yet", i.e. a silent hour-long wait. Say so and skip the entry.
+  case "$bot" in
+    *[!A-Za-z0-9._*@/\[\]-]*)
+      printf 'monitor-pr: ignoring invalid PR_REVIEWER_BOTS entry: %s\n' "$bot" >&2
+      continue ;;
+  esac
+  pattern="$(printf '%s' "$bot" | sed -e 's/[][\\^$.|?+(){}]/\\\\&/g' -e 's/\*/.*/g')"
+  printf '(.user.login | test("^%s$")) or ' "$pattern"
+done | sed 's/ or $//')
+# An all-whitespace or empty list would yield an empty filter, which is a jq
+# syntax error inside select(...) -- fall back to matching nothing explicitly.
+[ -z "$BOT_FILTER" ] && BOT_FILTER="false"
 
 # Gather baseline state
 prev_review_ids=$(gh api "repos/${REPO}/pulls/${PR}/comments" --jq '[.[].id] | sort | join(",")' 2>/dev/null || echo "")

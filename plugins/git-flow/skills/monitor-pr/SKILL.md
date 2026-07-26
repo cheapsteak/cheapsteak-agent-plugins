@@ -12,13 +12,20 @@ Uses **background process chaining** — a cheap bash script sleeps and polls `g
 
 ## Configuring Reviewer Bots
 
-Set `PR_REVIEWER_BOTS` to a comma-separated list of bot login names whose approval gates exit. Defaults to `claude[bot]` if unset.
+Set `PR_REVIEWER_BOTS` to a comma-separated list of bot logins whose approval gates exit. Defaults to `claude[bot]` if unset.
+
+Entries match the login **exactly** unless they contain `*`, which is a glob. Use a glob when a project renames the reviewer bot per-repo:
 
 ```bash
 # Examples
 export PR_REVIEWER_BOTS="claude[bot]"
 export PR_REVIEWER_BOTS="claude[bot],my-project-reviewer[bot]"
+export PR_REVIEWER_BOTS="*claude-reviewer[bot]"    # tbd-claude-reviewer[bot], acme-claude-reviewer[bot], …
 ```
+
+**Include the `[bot]` suffix.** Bot logins end in a literal `[bot]`, so `*claude-reviewer` matches nothing — it needs to be `*claude-reviewer[bot]` (or `*claude-reviewer*`). A pattern that matches nothing is indistinguishable from "the bot hasn't reviewed yet", so the poller just waits out its full timeout.
+
+Prefer the narrowest pattern that works. The exit condition requires *every* configured bot to have approved, so a broad glob that sweeps in a bot which never reviews this PR will wait forever.
 
 The list is passed to `poll_pr.sh` and used wherever bot reviewers are checked below.
 
@@ -140,11 +147,14 @@ Bot reviewers may post verdicts via **formal PR reviews** or **issue comments** 
 
 Build the bot login filter from `$PR_REVIEWER_BOTS`:
 
+Reuse the filter that `poll_pr.sh` builds rather than rebuilding it inline — it handles glob entries and the escaping they need. Sourcing is not required; the shape is:
+
 ```bash
-# Construct a jq `or` expression: .user.login == "a" or .user.login == "b" ...
-bots="${PR_REVIEWER_BOTS:-claude[bot]}"
-bot_filter=$(echo "$bots" | tr ',' '\n' | awk '{printf "%s.user.login == \"%s\"", (NR>1?" or ":""), $0}')
+# Construct a jq `or` expression over test() so glob entries work:
+#   (.user.login | test("^claude\\[bot\\]$")) or (.user.login | test("^.*claude-reviewer\\[bot\\]$"))
 ```
+
+Do **not** build this with `.user.login == "$bot"` and do not pass a raw pattern to `test()`. jq's `test()` is a regex engine and a login is not a regex: unescaped, `^claude[bot]$` reads `[bot]` as a character class, so it matches `claudeb` and fails to match `claude[bot]`.
 
 **Formal PR reviews:**
 ```bash
