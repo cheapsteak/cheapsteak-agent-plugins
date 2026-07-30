@@ -45,7 +45,19 @@ The primary reviewers are bots configured via `$PR_REVIEWER_BOTS` (default: `cla
 
 **Bot reviewers post verdicts in two ways:**
 1. **Formal PR reviews** — show up in `gh api repos/.../pulls/.../reviews` with states like `APPROVED`, `CHANGES_REQUESTED`
-2. **Issue comments (sticky comment pattern)** — the bot edits a single comment on the PR with verdict markers: `✅` = approved, `🧌` = changes requested. These show up in `gh api repos/.../issues/.../comments`, NOT in the PR reviews API.
+2. **Issue comments (sticky comment pattern)** — the bot edits a single comment on the PR whose first heading carries a verdict emoji. These show up in `gh api repos/.../issues/.../comments`, NOT in the PR reviews API.
+
+   Two families of opener are live at once, because the rendered verdict banner is opt-in per author (`CC_PR_REVIEW_PREFS_<USER>.verdict_banner`):
+
+   | Emoji | Opener | Means |
+   |---|---|---|
+   | `✅` | `## ✅ Approve` (LLM) · `## ✅ Ready to merge — …` (banner) | approved |
+   | `🧌` | `## 🧌 Reject` (LLM) | changes requested |
+   | `🛑` | `## 🛑 Changes requested — 1 HIGH · 2 MEDIUM` (banner) | changes requested |
+   | `⚠️` | `## ⚠️ Verdict withheld — this round read 0 of N changed files` | **nothing was assessed** — not an approval |
+   | `💬` | `## 💬 Review posted — no verdict recorded` | verdict unparseable — treat as unreviewed |
+
+   Read the verdict off the **first heading line**, not off "does `✅` appear anywhere in the body" — a body that discusses a `✅` under a `🛑` header otherwise reads as an approve. `⚠️` and `💬` must never fall through to a state you read as clean; both mean the PR has not actually been reviewed.
 
 Check both sources. The issue comment pattern is common for `claude[bot]` action-based reviewers.
 
@@ -95,8 +107,10 @@ The script only exits when something changed (or on safety timeout). So every no
    - `BOT_REVIEW_CHANGED` → fetch the full review comments, go to Addressing Comments. If state is `APPROVED`, also fetch the latest sticky comment and apply the same "top-level Medium+ findings?" check described under `BOT_COMMENT_REVIEW_CHANGED` below before treating this as a clean approve.
    - `BOT_COMMENT_REVIEW_CHANGED` → the bot updated its sticky comment verdict:
      - `Verdict: APPROVED` → clean approve, no unresolved Medium-or-higher findings. Check exit conditions.
-     - `Verdict: APPROVED_WITH_FINDINGS:<severities>` → the bot approved overall but flagged one or more top-level Critical/High/Medium findings in the body. **This is NOT an exit condition** — fetch the full comment body (`gh api repos/{owner}/{repo}/issues/{number}/comments --jq '.[-1].body'`) and address the listed-severity findings like any other review comment. The convention is that top-level severity markers (`### Medium` headings or bold `**Medium**` lines, ditto High/Critical) mean "fix this in this PR or as a same-day follow-up"; Minors under `<details>` are explicitly OK to defer.
+     - `Verdict: APPROVED_WITH_FINDINGS:<severities>` → the bot approved overall but flagged one or more top-level Critical/High/Medium findings in the body. **This is NOT an exit condition** — fetch the full comment body (`gh api repos/{owner}/{repo}/issues/{number}/comments --jq '.[-1].body'`) and address the listed-severity findings like any other review comment. The convention is that top-level severity markers mean "fix this in this PR or as a same-day follow-up"; Minors under `<details>` are explicitly OK to defer. See "What counts as a clean approve" for the four marker shapes.
      - `Verdict: CHANGES_REQUESTED` → fetch the full comment body and address the feedback.
+     - `Verdict: VERDICT_WITHHELD` → the round read 0 of N changed files, so **nothing was assessed**. Not an approval and not feedback to address: re-run the review (or push a commit) and keep monitoring. Never exit on this.
+     - `Verdict: NO_VERDICT_RECORDED` → the harness could not read a verdict for the round. Treat as unreviewed, same handling as above.
    - `CI_FAILURES` → go to CI Failure Handling
    - `NEW_REVIEW_COMMENTS` or `NEW_ISSUE_COMMENTS` → go to Addressing Comments
    - `CI_STATUS_CHANGED` (all passing) → note it, check exit conditions
@@ -132,12 +146,28 @@ The bot's sticky comment can carry both a top-level verdict AND findings. The ve
 
 | Body shape | Means | Counts as clean approve? |
 |---|---|---|
-| `### ✅ Approve` + body has zero `### Medium`-style headings or `**Medium**`-style bold lines (ditto High/Critical) outside `<details>` blocks | Clean approve | ✅ Yes |
-| `### ✅ Approve` + body has `<details><summary>Minor</summary>…</details>` | Approved with minors (deferrable) | ✅ Yes |
-| `### ✅ Approve` + body has a top-level `### Medium`/`**Medium**` marker (ditto High/Critical) | Approved overall, BUT the bot wants the listed-severity items fixed in this PR or as a same-day follow-up | ❌ **No — keep going** |
-| `### 🧌 Request changes` (any body) | Not approved | ❌ No |
+| `✅` header + no top-level severity marker outside `<details>` | Clean approve | ✅ Yes |
+| `✅` header + `<details><summary>Minor</summary>…</details>` | Approved with minors (deferrable) | ✅ Yes |
+| `✅` header + a top-level Critical/High/Medium marker | Approved overall, BUT the bot wants the listed-severity items fixed in this PR or as a same-day follow-up | ❌ **No — keep going** |
+| `🧌` or `🛑` header (any body) | Not approved | ❌ No |
+| `⚠️` or `💬` header (any body) | Nothing was assessed / no verdict recorded | ❌ **No — this is not a review** |
 
-The `poll_pr.sh` script encodes this rule and emits `APPROVED_WITH_FINDINGS:<severities>` instead of `APPROVED` when the body has top-level severity findings. If you ever read a sticky directly (e.g. from `BOT_REVIEW_CHANGED` with formal-review state `APPROVED`), apply the same check yourself before declaring exit-ready: strip `<details>...</details>` blocks, then grep for `^(?:###\s+|\*\*)(Critical|High|Medium)\b` — bots render severity markers both as headings (`### Medium`) and as bold lines (`**Medium**`), sometimes within the same review series.
+The `poll_pr.sh` script encodes this rule and emits `APPROVED_WITH_FINDINGS:<severities>` instead of `APPROVED` when the body has top-level severity findings. If you ever read a sticky directly (e.g. from `BOT_REVIEW_CHANGED` with formal-review state `APPROVED`), apply the same check yourself before declaring exit-ready: strip `<details>...</details>` blocks, then match
+
+```
+^(?:#{2,4}\s+|\*\*)\[?(CRITICAL|HIGH|MEDIUM)\]?\b     # case-insensitive
+```
+
+Four rendering shapes are live and all must match — a regex that catches only the first two silently reads a real finding as a clean approve, which is exactly how a Medium sailed through on 2026-06-10:
+
+| Shape | Source |
+|---|---|
+| `### Medium` | heading, title case (legacy matrix reviewer) |
+| `**Medium**` | bold line (missed until 2026-06-10) |
+| `### MEDIUM — Architect` | heading, UPPERCASE (shadow reviewer) |
+| `**[HIGH] Core:**` | bracketed inline-finding prefix (shadow reviewer) |
+
+The last two are why the match must be **case-insensitive** and must tolerate a `[`. Skip the verdict header line itself when scanning — `## 🛑 Changes requested — 1 HIGH · 2 MEDIUM` carries severity words that are a tally, not findings.
 
 This rule exists because the bot uses APPROVE+Medium-in-body to mean "I'd merge this, but please address X first or same-day." Treating it as a clean approve and exiting silently misses real work the reviewer wants done.
 
@@ -170,13 +200,13 @@ gh api repos/{owner}/{repo}/issues/{number}/comments \
   --jq "[.[] | select($bot_filter)] | last | .body"
 ```
 
-The bot edits a single sticky comment with its verdict. Look for emoji markers in the comment body:
-- `✅` = approved (equivalent to `APPROVED`)
-- `🧌` = changes requested (equivalent to `CHANGES_REQUESTED`)
+The bot edits a single sticky comment with its verdict. Classify off the **first heading line** using the emoji table in Step 1 — `✅` approved, `🧌`/`🛑` changes requested, `⚠️`/`💬` not-a-review.
 
 Either source counts. The bot is satisfied **only when**:
-1. The formal review says `APPROVED` OR the sticky comment contains `✅`, AND
-2. The sticky comment body has no top-level Critical/High/Medium marker (`### ` heading or `**bold**` line form) outside a `<details>` block.
+1. The formal review says `APPROVED` OR the sticky's verdict header carries `✅`, AND
+2. The sticky comment body has no top-level Critical/High/Medium marker outside a `<details>` block (all four shapes above, matched case-insensitively).
+
+A `⚠️ Verdict withheld` sticky is the trap worth naming: it fires when the round read 0 of N changed files, and every other convergence signal (green `AI Review`, `OPEN=0`, `CONVERGED`) looks identical to a genuinely clean review. Never exit on it.
 
 `poll_pr.sh` checks both — when it would have emitted `APPROVED` based on `✅` alone but the body has top-level Medium+ headings, it emits `APPROVED_WITH_FINDINGS:<severities>` instead. See "What counts as a clean approve" above for the full rule.
 

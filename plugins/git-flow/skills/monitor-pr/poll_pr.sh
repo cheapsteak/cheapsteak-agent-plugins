@@ -108,44 +108,84 @@ while (( elapsed < MAX_WAIT )); do
 
   # Compare bot review status (issue comment verdicts — sticky comment pattern)
   if [[ "$cur_bot_comment" != "$prev_bot_comment" ]]; then
-    # Extract verdict from comment body (look for emoji markers)
-    bot_verdict=""
-    if echo "$cur_bot_comment" | grep -q "✅"; then
-      # Even on APPROVE, the bot can flag findings the body says belong in
-      # this PR. Common convention across reviewer-bot stickies:
-      # top-level severity markers (`### Critical` headings or bold `**Medium**`
-      # lines) mean "fix this here or as a same-day follow-up"; Minors are
-      # collapsed under `<details>` and are explicitly OK to defer. If the body
-      # has any top-level Critical/High/Medium marker outside a <details> block,
-      # emit APPROVED_WITH_FINDINGS:<csv> so the caller doesn't exit prematurely.
-      findings=$(echo "$cur_bot_comment" | python3 -c '
+    # Extract the verdict AND any top-level severity findings in one pass. Doing
+    # both in Python (rather than a chain of shell greps) is what lets the verdict
+    # be read off the sticky's VERDICT HEADER rather than off "does ✅ appear
+    # anywhere in the body" — a body that discusses a ✅ while its header says 🛑
+    # otherwise reads as an approve.
+    bot_verdict=$(echo "$cur_bot_comment" | python3 -c '
 import re, sys
 body = sys.stdin.read()
-# Strip <details>...</details> blocks (non-greedy, dot matches newlines).
-stripped = re.sub(r"<details>.*?</details>", "", body, flags=re.DOTALL)
-# Look for top-level severity markers at the start of a line, optionally
-# followed by trailing qualifiers (e.g. `### Medium — one MEDIUM gap`). Bots
-# render these two ways, sometimes within the same review series:
-#   `### Medium`     (heading form)
-#   `**Medium**`     (bold-line form — missed until 2026-06-10, when a real
-#                     Medium sailed through as a clean APPROVED)
-hits = re.findall(r"^(?:###\s+|\*\*)(Critical|High|Medium)\b", stripped, flags=re.MULTILINE)
-if hits:
-    # De-duplicate while preserving order
+
+# ── Verdict ────────────────────────────────────────────────────────────────
+# Two families of opener, both live:
+#   * LLM-authored, from the author personal prompt:  "## ✅ Approve" / "## 🧌 Reject"
+#   * Rendered by post_review.build_verdict_banner (opt-in per author, and the
+#     default for anyone who sets CC_PR_REVIEW_PREFS_<USER>.verdict_banner):
+#       "## ✅ Ready to merge — no findings"
+#       "## 🛑 Changes requested — 1 HIGH · 2 MEDIUM"     <- 🛑, NOT 🧌
+#       "## ⚠️ Verdict withheld — this round read 0 of 9 changed files"
+#       "## 💬 Review posted — no verdict recorded"
+# The last two are explicitly NOT approvals ("Treat this as unreviewed"), so they
+# must never fall through to a state the caller reads as clean.
+_BY_EMOJI = [
+    ("\U0001F6D1", "CHANGES_REQUESTED"),      # 🛑 banner
+    ("\U0001F9CC", "CHANGES_REQUESTED"),      # 🧌 personal-prompt opener
+    ("⚠",     "VERDICT_WITHHELD"),       # ⚠️  nothing was assessed
+    ("\U0001F4AC", "NO_VERDICT_RECORDED"),    # 💬 unparseable verdict
+    ("✅",     "APPROVED"),               # ✅
+]
+
+def classify(text):
+    for emoji, verdict in _BY_EMOJI:
+        if emoji in text:
+            return verdict
+    return ""
+
+# Prefer the first markdown heading (the verdict header); fall back to the whole
+# body for stickies that open with prose.
+verdict = ""
+for line in body.splitlines():
+    if re.match(r"^#{1,4}\s", line):
+        verdict = classify(line)
+        if verdict:
+            break
+if not verdict:
+    verdict = classify(body)
+
+# ── Findings (only meaningful on an approve) ───────────────────────────────
+# Even on APPROVE the bot can flag findings the body says belong in this PR.
+# Top-level severity markers mean "fix here or same-day"; Minors collapsed under
+# <details> are explicitly OK to defer.
+if verdict == "APPROVED":
+    stripped = re.sub(r"<details>.*?</details>", "", body, flags=re.DOTALL)
+    # Drop the verdict header itself: "## 🛑 Changes requested — 1 HIGH · 2 MEDIUM"
+    # carries severity words that are a tally, not findings.
+    stripped = "\n".join(
+        l for l in stripped.splitlines() if not re.match(r"^#{1,4}\s+[^A-Za-z0-9]", l)
+    )
+    # Four rendering shapes seen in the wild, all of which must match:
+    #   "### Medium"          heading, title case (legacy matrix reviewer)
+    #   "**Medium**"          bold line (missed until 2026-06-10 — a real Medium
+    #                         sailed through as a clean APPROVED)
+    #   "### MEDIUM — Architect"   heading, UPPERCASE (shadow reviewer; the
+    #                         case-sensitive regex missed this one the same way)
+    #   "**[HIGH] Core:**"    bracketed inline-finding prefix (shadow reviewer)
+    hits = re.findall(
+        r"^(?:#{2,4}\s+|\*\*)\[?(CRITICAL|HIGH|MEDIUM)\]?\b",
+        stripped,
+        flags=re.MULTILINE | re.IGNORECASE,
+    )
     seen = []
     for h in hits:
+        h = h.capitalize()
         if h not in seen:
             seen.append(h)
-    print(",".join(seen))
+    if seen:
+        verdict = "APPROVED_WITH_FINDINGS:" + ",".join(seen)
+
+print(verdict)
 ' 2>/dev/null || echo "")
-      if [[ -n "$findings" ]]; then
-        bot_verdict="APPROVED_WITH_FINDINGS:$findings"
-      else
-        bot_verdict="APPROVED"
-      fi
-    elif echo "$cur_bot_comment" | grep -q "🧌"; then
-      bot_verdict="CHANGES_REQUESTED"
-    fi
     prev_bot_comment="$cur_bot_comment"
     # Only wake up Claude when there's a final verdict, not for "working..." placeholder updates
     if [[ -n "$bot_verdict" ]]; then
