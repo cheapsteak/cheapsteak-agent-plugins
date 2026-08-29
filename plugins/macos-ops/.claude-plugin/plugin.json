@@ -1,9 +1,9 @@
 {
     "name": "macos-ops",
-    "description": "macOS sysadmin skills. Today: diagnose memory pressure and identify what's consuming RAM.",
+    "description": "macOS sysadmin skills: diagnose memory pressure and identify what's consuming RAM; read 1Password secrets via the op CLI without leaking them into the transcript.",
     "author": {
         "name": "Chang Wang",
         "email": "garnwraly@gmail.com"
     },
-    "keywords": ["macos", "memory", "diagnostics", "performance"]
+    "keywords": ["macos", "memory", "diagnostics", "performance", "1password", "secrets", "credentials"]
 }

@@ -27,7 +27,7 @@ Restart Claude Code after installation — plugins added mid-session don't load.
 | **`git-flow`** | 0.4.0 | Commit, push, PR, rebase, review-feedback, subagent-review-loop, stacked-prs workflows on top of `git` + `gh` |
 | **`skill-authoring-kit`** | 0.1.0 | Build Claude skills, plugins, and hooks |
 | **`agent-workflow`** | 0.3.0 | Adversarial review, scheduled wake-ups, background-monitor polling, `/explain` command |
-| **`macos-ops`** | 0.1.0 | macOS sysadmin (memory diagnosis today) |
+| **`macos-ops`** | 0.1.0 | macOS sysadmin (memory diagnosis, 1Password secret access) |
 | **`web-tools`** | 0.3.0 | Playwright-CLI-based browsing (cua-driver as alternative) |
 | **`gql`** | 0.1.0 | GraphQL / Apollo patterns |
 | **`computer-use`** | 0.1.0 | Drive native desktop apps via cua-driver (Windows DPI click-offset fix + headless foreground) |
@@ -39,7 +39,7 @@ Restart Claude Code after installation — plugins added mid-session don't load.
 | `git-flow` | `pr`, `rebase`, `monitor-pr`, `address-pr-feedback`, `subagent-review-loop`, `stacked-prs` |
 | `skill-authoring-kit` | `skill-authoring`, `create-plugin`, `claude-hooks` |
 | `agent-workflow` | `adversarial-review`, `later`, `monitor` |
-| `macos-ops` | `diagnose-memory` |
+| `macos-ops` | `diagnose-memory`, `1password-access` |
 | `web-tools` | `browse` |
 | `gql` | `apollo-optimistic-updates` |
 | `computer-use` | `drive-pc-apps` |

@@ -1,5 +1,9 @@
 # Changelog
 
+## [macos-ops] 2026-08-29
+
+**New:** `1password-access` skill — read a secret from 1Password via the `op` CLI without leaking it into the transcript. Four things that cost trial and error on macOS with `op` 2.39 + desktop-app integration: `op whoami` is not a liveness check (it succeeds against a locked vault, so `op` can still report "account is not signed in"); use the ID form of `op://`, not the name form; two commands leak the secret to stdout; and how to inspect an item's shape without revealing it.
+
 ## [cheapsteak-agent-plugins] 0.9.0
 
 git-flow gains the `stacked-prs` skill.
