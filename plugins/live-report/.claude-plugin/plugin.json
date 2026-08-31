@@ -1,0 +1,17 @@
+{
+    "name": "live-report",
+    "description": "Keep a per-worktree live report the session cannot forget to update: a short current-state document plus a prepend-only record, enforced at turn end by a Stop hook rather than asked for in a prompt.",
+    "author": {
+        "name": "Chang Wang",
+        "email": "garnwraly@gmail.com"
+    },
+    "keywords": [
+        "status",
+        "hooks",
+        "worktree",
+        "handoff",
+        "context",
+        "reporting",
+        "parallel-sessions"
+    ]
+}

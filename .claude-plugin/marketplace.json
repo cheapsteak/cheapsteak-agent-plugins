@@ -112,7 +112,7 @@
         },
         {
             "name": "computer-use",
-            "description": "Drive native desktop GUI apps via cua-driver — read the screen, click, type, navigate — reliably, including DPI-unaware legacy Windows apps where pixel clicks land offset. Today: drive-pc-apps.",
+            "description": "Drive native desktop GUI apps via cua-driver \u2014 read the screen, click, type, navigate \u2014 reliably, including DPI-unaware legacy Windows apps where pixel clicks land offset. Today: drive-pc-apps.",
             "source": "./plugins/computer-use",
             "author": {
                 "name": "Chang Wang",
@@ -126,6 +126,24 @@
                 "ui-automation",
                 "dpi",
                 "accessibility"
+            ]
+        },
+        {
+            "name": "live-report",
+            "description": "Keep a per-worktree live report the session cannot forget to update: a short current-state document plus a prepend-only record, enforced at turn end by a Stop hook rather than asked for in a prompt.",
+            "source": "./plugins/live-report",
+            "author": {
+                "name": "Chang Wang",
+                "email": "garnwraly@gmail.com"
+            },
+            "keywords": [
+                "status",
+                "hooks",
+                "worktree",
+                "handoff",
+                "context",
+                "reporting",
+                "parallel-sessions"
             ]
         }
     ]

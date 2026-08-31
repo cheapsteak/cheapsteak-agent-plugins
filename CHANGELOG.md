@@ -1,5 +1,16 @@
 # Changelog
 
+## [live-report] 2026-08-30
+
+New plugin: a per-worktree live status document that a `Stop` hook keeps current, for when you are running several agent sessions at once and the chat has scrolled past the thing you needed to decide.
+
+**New:**
+- `live-report` skill — the two-file model (`.agent/live-report/status.md`, rewritten whole every update and capped; `.agent/live-report/status-log.md`, prepend-only and newest-first), the document skeleton, the `last updated:` stamp contract, stable never-reused question numbers under **Waiting on you**, pressure-driven promotion written from the log's verbatim entries, and three verbs — `/live-report`, `/live-report off`, `/live-report update`.
+- `Stop` hook — enforces freshness at turn end instead of asking the model to remember: blocks when the document has no stamp, has gone `floor_turns` behind, or `HEAD` moved since the last write; warns (never blocks) over `cap_lines`; refreshes its own `derived:` block and never writes the `last updated:` stamp it checks, so the exit condition cannot satisfy itself. Prints `⏸ waiting on you — Q7, Q9 — <path>` only when the open-question set changes.
+- `SessionStart` hook — informs rather than enforces, claims document ownership for the new session (so a restart takes over instead of freezing the document forever), and states this session's id, which is the model's only source for the value the stamp requires.
+- Three config layers: `<plugin>/config.default.json` < `~/.config/live-report/config.json` < `.agent/live-report/config.json`. Per-worktree opt-in via the `.agent/live-report/on` marker — the hooks are a single `[ -f ]` test everywhere else.
+- Python tests under `plugins/live-report/tests/`, run with `python3 -m unittest discover -s plugins/live-report/tests -p 'test_*.py'`.
+
 ## [macos-ops] 2026-08-29
 
 **New:** `1password-access` skill — read a secret from 1Password via the `op` CLI without leaking it into the transcript. Four things that cost trial and error on macOS with `op` 2.39 + desktop-app integration: `op whoami` is not a liveness check (it succeeds against a locked vault, so `op` can still report "account is not signed in"); use the ID form of `op://`, not the name form; two commands leak the secret to stdout; and how to inspect an item's shape without revealing it.
