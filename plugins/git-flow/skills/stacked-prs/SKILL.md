@@ -117,9 +117,30 @@ Every PR up to your chosen one is merged in a single all-or-nothing operation: i
 
 **Under a merge queue, `merge` enqueues rather than merges.** The queue owns the strategy, so `--merge-method` / `--squash` / `--rebase` are ignored with a warning. The selected PRs are added to the queue together, but GitHub's own documentation says they "may land in separate groups rather than all at once" — and merge-queue support for stacks was still rolling out progressively as of the changelog.
 
-**Open question, repo by repo: does your merge queue land a stack as one group?** Settle it by running `gh stack merge` on a real two-PR stack and reading whether both entries appear in one `gh-readonly-queue/<trunk>/...` group or two. Until you have measured it on the repo you are in, treat the layers as landing independently: enqueue the bottom, let it land, restack, enqueue the next.
+### Enqueueing one layer, without `gh stack merge`
 
-**A second open question:** whether required checks gate a PR *while* it is stacked. Required checks are configured on the trunk, so historically a PR based on a plain branch had none — `gh pr checks <pr> --required` returned nothing and the PR could look green while nothing gated it. Whether a native Stack changes that evaluation has not been measured. Run `gh pr checks <child> --required` on a linked stack: empty reproduces the old behaviour, populated means it changed.
+**`gh pr merge` refuses a linked stack member outright**, at any layer:
+
+> This pull request is part of a stack and must be enqueued using the asynchronous merge REST API
+
+So a wrapper that shells out to `gh pr merge` cannot enqueue a stack at all. The call that works is [`PUT /repos/{owner}/{repo}/pulls/{n}/merge-async`](https://docs.github.com/rest/pulls/pulls#merge-a-pull-request-asynchronously):
+
+```bash
+gh api -X PUT repos/<owner>/<repo>/pulls/<pr>/merge-async \
+  -f merge_action=merge_queue -f sha=<head>
+# -> {"status":"pending","details":{"message":"Merge request enqueued.",…}}
+```
+
+`merge_action=merge_queue` is what keeps this a **queue** operation — do not reach for `PUT .../pulls/{n}/merge` because the path looks similar; that one is a direct merge and bypasses the queue. HTTP 409 means GitHub already holds a merge request for the PR, which is the desired end state.
+
+Same blast radius as `gh stack merge`: GitHub's docs say "all pull requests in the stack up to and including the requested PR will be merged into the base branch". Requesting the bottom enqueues only the bottom. Name the PR deliberately.
+
+**Measured 2026-09-22 on one repo (`longeye-ai/monorepo`), one three-PR stack** — treat it as one data point, not as GitHub-wide behaviour, and re-run the reads on your own repo:
+
+- **The queue took the whole stack as one group.** All three entries showed `mergeQueueEntry.state = AWAITING_CHECKS` simultaneously and landed as three merge commits 22 seconds apart. The upper layers were **not** retargeted to the trunk first — they merged out of the queue with their stacked bases intact, so no restack happened between layers. Until you have measured your own repo, keep treating the layers as landing independently: enqueue the bottom, let it land, restack, enqueue the next.
+- **A linked stacked PR DID carry required checks.** `gh pr checks <child> --required` reported the full required set on both upper layers, and they were green before the merge. The historical observation below is the one this contradicts, and only for a *linked* stack.
+
+**Still true for an UNLINKED stacked PR**, and not re-measured: required checks are configured on the trunk, so a PR based on a plain branch has none — `gh pr checks <pr> --required` returns nothing and the PR can look green while nothing gates it. A PR that merely targets another PR's branch is not a Stack, so run `gh stack link` before relying on the paragraph above.
 
 ## Rules that native stacks do not retire
 
