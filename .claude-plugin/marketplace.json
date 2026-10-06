@@ -145,6 +145,22 @@
                 "reporting",
                 "parallel-sessions"
             ]
+        },
+        {
+            "name": "shell-guards",
+            "description": "PreToolUse guard on Bash that blocks kill commands which hit unrelated processes: pkill/pgrep with an option after the pattern (macOS treats it as another pattern), and kill of a parent pid read from `ps -o ppid`.",
+            "source": "./plugins/shell-guards",
+            "author": {
+                "name": "Chang Wang",
+                "email": "garnwraly@gmail.com"
+            },
+            "keywords": [
+                "hooks",
+                "bash",
+                "safety",
+                "pkill",
+                "macos"
+            ]
         }
     ]
 }

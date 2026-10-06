@@ -1,5 +1,15 @@
 # Changelog
 
+## [shell-guards] 2026-10-06
+
+New plugin: a `PreToolUse` hook on `Bash` that blocks two command shapes that have killed many unrelated processes on a real machine.
+
+**New:**
+- Blocks `pkill`/`pgrep` with an option after the pattern. macOS (BSD) `pkill` and `pgrep` stop option parsing at the first pattern, so a trailing `-n` or `-0` becomes another pattern and matches every process whose command line contains it: `pgrep -f nomatch` finds nothing, `pgrep -f nomatch -n -0` finds most of the machine. Handles `sudo`, absolute paths, `$(...)`, `--`, pipelines, command lists and loop bodies; options that take a value, signal forms before the pattern, and redirections are not flagged.
+- Blocks `kill` in a command that also reads a parent pid with `ps -o ppid`. The parent of a Bash-tool shell is the agent's own process, so such a loop kills the session running it. Deliberately coarse; the message says so and points at killing the exact pid that was started.
+- Blocks with exit code 2 and the reason on stderr; fails open (exit 0, no output) on anything it cannot parse.
+- Python tests under `plugins/shell-guards/tests/`, run with `python3 -m unittest discover -s plugins/shell-guards/tests -p 'test_*.py'`.
+
 ## [live-report] 2026-08-30
 
 New plugin: a per-worktree live status document that a `Stop` hook keeps current, for when you are running several agent sessions at once and the chat has scrolled past the thing you needed to decide.

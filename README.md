@@ -17,6 +17,7 @@ Chang's Claude Code plugins — generic dev workflow, skill authoring, and macOS
 /plugin install gql@cheapsteak-agent-plugins
 /plugin install computer-use@cheapsteak-agent-plugins
 /plugin install live-report@cheapsteak-agent-plugins
+/plugin install shell-guards@cheapsteak-agent-plugins
 ```
 
 Restart Claude Code after installation — plugins added mid-session don't load.
@@ -33,6 +34,7 @@ Restart Claude Code after installation — plugins added mid-session don't load.
 | **`gql`** | 0.1.0 | GraphQL / Apollo patterns |
 | **`computer-use`** | 0.1.0 | Drive native desktop apps via cua-driver (Windows DPI click-offset fix + headless foreground) |
 | **`live-report`** | 0.1.0 | Per-worktree live status document + prepend-only log, kept current by a `Stop` hook |
+| **`shell-guards`** | — | `PreToolUse` guard that blocks Bash kill commands which hit unrelated processes (`pkill`/`pgrep` options after the pattern, `kill` of a `ps -o ppid` parent) |
 
 ### Skill → plugin mapping
 
@@ -46,6 +48,7 @@ Restart Claude Code after installation — plugins added mid-session don't load.
 | `gql` | `apollo-optimistic-updates` |
 | `computer-use` | `drive-pc-apps` |
 | `live-report` | `live-report` |
+| `shell-guards` | — (hook only: `PreToolUse` on `Bash`) |
 
 ## Repository layout
 
