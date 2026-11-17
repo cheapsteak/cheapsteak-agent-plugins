@@ -1,5 +1,9 @@
 # Changelog
 
+## [git-flow] 2026-11-17
+
+**Changed:** `pr` skill: a fix PR's description now has a "How it got broken" step between the root cause and the fix. It names the commit or PR that introduced the bug, or the change that made a latent flaw start biting, checked with `git log`/`git blame` on the touched lines, and says why it wasn't caught. If that can't be found in a few minutes, the description says "provenance unclear" instead of guessing.
+
 ## [agent-workflow] 2026-11-17
 
 **New:** `methodical-teardown` skill: a phased method for a rigorous teardown of reference material. It builds an evidence system first (numbered notes, observed/inferred tags, later notes override earlier ones, a corrections ledger), then jobs and stories, a gap analysis, and an isolated prototype with an adversarial review. Safety rules cover untrusted sources, HAR redaction, isolated browser profiles and test-object ledgers. Bundles a Babel-based JS bundle splitter. Distilled from a week-long teardown of claude.ai Slides and Docs.

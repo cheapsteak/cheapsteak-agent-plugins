@@ -102,7 +102,8 @@ Structure:
 **For Fix PRs**, lead with the problem, not the solution:
 1. **What's broken** — the bug and how it manifests
 2. **Why it happens** — root cause
-3. **What this PR does** — the fix and why this approach
+3. **How it got broken** — provenance: which commit/PR introduced it, or which change made a latent flaw start biting (often several commits interacting — say so). Check `git log`/`git blame` on the touched lines before writing this; if it's genuinely unknowable in a few minutes, write "provenance unclear" rather than guessing. One or two sentences also covering why it wasn't caught at the time (no test, latent until scale, estimate-dependent, etc.).
+4. **What this PR does** — the fix and why this approach
 
 Don't start with "Replace X with Y". Start with the symptom the reader can picture.
 
