@@ -61,7 +61,7 @@
         },
         {
             "name": "macos-ops",
-            "description": "macOS sysadmin skills: diagnose memory pressure and identify what's consuming RAM; read 1Password secrets via the op CLI without leaking them into the transcript.",
+            "description": "macOS sysadmin skills: diagnose memory pressure and identify what's consuming RAM; read 1Password secrets via the op CLI without leaking them into the transcript; move a developer Mac to a new one with Migration Assistant (what to delete first, what to fix after).",
             "source": "./plugins/macos-ops",
             "author": {
                 "name": "Chang Wang",
@@ -74,7 +74,10 @@
                 "performance",
                 "1password",
                 "secrets",
-                "credentials"
+                "credentials",
+                "migration",
+                "migration-assistant",
+                "nix"
             ]
         },
         {

@@ -1,5 +1,9 @@
 # Changelog
 
+## [macos-ops] 2026-11-17
+
+**New:** `migrate-mac` skill: move a developer Mac to a new one with Migration Assistant. Before the move: what recreates `node_modules` and `.venv` while you delete them (direnv installers, editor language servers, LaunchAgents running from a venv), what regenerates and how to find it (dependency folders, package stores, build output that git doesn't track, sparse VM and container disk images, large app downloads, server logs), the delete rate to expect (about 27,000 files a second, held back by `fseventsd`), and a check for LaunchAgents whose program is gone. After: reinstalling Nix, whose store volume doesn't migrate while its `/etc` leftovers do (stale `*.backup-before-nix` files, Full Disk Access, the installer rewriting `/etc/nix/nix.conf`), re-enrolling Okta Verify, Xcode first launch, rustup's stale default `stable`, and `brew bundle check` wording.
+
 ## [git-flow] 2026-11-17
 
 **Changed:** `pr` skill: a fix PR's description now has a "How it got broken" step between the root cause and the fix. It names the commit or PR that introduced the bug, or the change that made a latent flaw start biting, checked with `git log`/`git blame` on the touched lines, and says why it wasn't caught. If that can't be found in a few minutes, the description says "provenance unclear" instead of guessing.
