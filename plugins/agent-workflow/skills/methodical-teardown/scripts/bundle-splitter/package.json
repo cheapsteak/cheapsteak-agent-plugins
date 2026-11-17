@@ -1,0 +1,13 @@
+{
+  "name": "bundle-splitter",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@babel/generator": "^8.0.6",
+    "@babel/parser": "^8.0.6",
+    "@babel/traverse": "^8.0.6",
+    "@babel/types": "^8.0.6",
+    "prettier": "^3.9.9",
+    "@wakaru/cli": "^1.14.0"
+  }
+}

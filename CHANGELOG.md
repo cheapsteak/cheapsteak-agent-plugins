@@ -1,5 +1,9 @@
 # Changelog
 
+## [agent-workflow] 2026-11-17
+
+**New:** `methodical-teardown` skill: a phased method for a rigorous teardown of reference material. It builds an evidence system first (numbered notes, observed/inferred tags, later notes override earlier ones, a corrections ledger), then jobs and stories, a gap analysis, and an isolated prototype with an adversarial review. Safety rules cover untrusted sources, HAR redaction, isolated browser profiles and test-object ledgers. Bundles a Babel-based JS bundle splitter. Distilled from a week-long teardown of claude.ai Slides and Docs.
+
 ## [shell-guards] 2026-10-06
 
 New plugin: a `PreToolUse` hook on `Bash` that blocks two command shapes that have killed many unrelated processes on a real machine.
